@@ -192,17 +192,16 @@ async def test_openai_backend_forwards_provider_params_to_create() -> None:
         messages=[{"role": "user", "content": "Hello"}],
         max_tokens=100,
         extra_params={
+            "extra_body": {"provider-option": "value"},
             "extra_headers": {"x-opencode-session": "session-id"},
-            "parallel_tool_calls": False,
-            "json_mode": True,
+            "extra_query": {"provider-query": "value"},
         },
     )
 
     call = client.chat.completions.create.await_args.kwargs
+    assert call["extra_body"] == {"provider-option": "value"}
     assert call["extra_headers"] == {"x-opencode-session": "session-id"}
-    assert call["parallel_tool_calls"] is False
-    assert call["response_format"] == {"type": "json_object"}
-    assert "json_mode" not in call
+    assert call["extra_query"] == {"provider-query": "value"}
 
 
 @pytest.mark.asyncio

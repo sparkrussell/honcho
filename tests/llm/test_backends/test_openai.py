@@ -198,7 +198,7 @@ async def test_openai_backend_forwards_provider_params_to_create() -> None:
         },
     )
 
-    call = client.chat.completions.create.await_args.kwargs
+    call = _await_kwargs(client.chat.completions.create)
     assert call["extra_body"] == {"provider-option": "value"}
     assert call["extra_headers"] == {"x-opencode-session": "session-id"}
     assert call["extra_query"] == {"provider-query": "value"}
